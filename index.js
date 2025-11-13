@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 require("dotenv").config();
 const app = express();
 const port = process.env.PORT;
@@ -26,8 +26,22 @@ app.get("/", (req, res) => {
 
 async function run() {
   try {
-    // Connect the client to the server	(optional starting in v4.7)
+    // Connect the client to the server-	(optional starting in v4.7)
     await client.connect();
+
+    const db = client.db("utility_bills");
+    const billsCollection = db.collection("bills");
+    const myBillsCollection = db.collection("myBills");
+
+    // bills data post in database
+    app.post("/bills", async (req, res) => {
+      const newBills = req.body;
+      const result = await billsCollection.insertMany(newBills);
+      res.send(result);
+    });
+
+   
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
@@ -35,7 +49,7 @@ async function run() {
     );
   } finally {
     // Ensures that the client will close when you finish/error
-    await client.close();
+    // await client.close();
   }
 }
 run().catch(console.dir);
