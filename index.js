@@ -72,6 +72,19 @@ async function run() {
       res.send(result.value);
     });
 
+    app.delete("/myBills/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+
+      const result = await myBillsCollection.deleteOne(query);
+
+      if (result.deletedCount === 0) {
+        return res.status(404).json({ message: "Bill not found" });
+      }
+
+      res.json({ message: "Bill deleted successfully" });
+    });
+
     
 
     // Send a ping to confirm a successful connection
