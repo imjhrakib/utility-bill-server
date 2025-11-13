@@ -40,7 +40,23 @@ async function run() {
       res.send(result);
     });
 
-   
+    app.get("/bills", async (req, res) => {
+      const cursor = billsCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+    app.get("/myBills", async (req, res) => {
+      console.log(req.query);
+      const email = req.query.email;
+      const query = {};
+      if (email) {
+        query.email = email;
+      }
+      const cursor = myBillsCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+    
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
