@@ -85,8 +85,15 @@ async function run() {
       res.json({ message: "Bill deleted successfully" });
     });
 
-    
+    app.get("/bills/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const bill = await billsCollection.findOne(query);
+      console.log(bill);
+      res.send(bill);
+    });
 
+    
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
