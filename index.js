@@ -56,6 +56,22 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
+    app.patch("/myBills/:id", async (req, res) => {
+      const id = req.params.id;
+      const updatedBill = req.body;
+      const result = await myBillsCollection.findOneAndUpdate(
+        { _id: new ObjectId(id) },
+        { $set: updatedBill },
+        { returnDocument: "after" }
+      );
+
+      if (!result.value) {
+        return res.status(404).send({ message: "Bill not found" });
+      }
+
+      res.send(result.value);
+    });
+
     
 
     // Send a ping to confirm a successful connection
